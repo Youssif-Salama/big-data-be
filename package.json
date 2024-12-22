@@ -1,0 +1,25 @@
+{
+  "name": "bigdata.be",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
+    "test:candle":"PORT=10000 node --experimental-vm-modules ./node_modules/.bin/jest --testPathPattern=candel",
+    "test:exchange":"PORT=10001 node --experimental-vm-modules ./node_modules/.bin/jest --testPathPattern=exchange",
+    "test:metadata":"PORT=10001 node --experimental-vm-modules ./node_modules/.bin/jest --testPathPattern=metadata"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ioredis": "^5.4.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
