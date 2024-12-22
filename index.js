@@ -1,9 +1,9 @@
 import express from "express";
-import env from "dotenv"
 import loadDbFiles from "./database.js";
 import v1Router from "./src/vRouters/v1.router.js";
-import { attachGetQueryMiddleware } from "./src/middlewares/attach.query.middlewares.js";
 import NotFoundService from "./src/services/not.found.services.js";
+import cors from "cors";
+import env from "dotenv"
 env.config();
 
 // initiat app.
@@ -12,10 +12,17 @@ export const app=express();
 // use .json middlware to handle parsing
 app.use(express.json());
 
+// welcome test endpoint
+app.get("/",(req,res)=>{
+  res.status(200).json({message:"welcome to the api 2025"})
+});
+
+// apply cors
+app.use(cors())
+
 // vars & middlwares part
 const Port=8080 || process.env.PORT;
 app.use("/api/v1",v1Router);
-app.get("/",attachGetQueryMiddleware("exchange"));
 app.use(NotFoundService)
 
 

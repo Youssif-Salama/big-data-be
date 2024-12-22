@@ -60,7 +60,7 @@ Ensure you have the following installed:
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/bigdata-app.git
+git clone https://github.com/Youssif-Salama/big-data-be.git
 cd bigdata-app
 ```
 
