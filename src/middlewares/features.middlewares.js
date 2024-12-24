@@ -35,19 +35,45 @@ export const filterQueryMiddleware =
  */
 export const selectQueryMiddleware = (req, res, next) => {
   const { selectors } = req.query;
-  if (!selectors || !Array.isArray(selectors)) return next();
+
+  if (!selectors) return next();
+
+  let parsedSelectors;
+  try {
+    parsedSelectors = JSON.parse(selectors); // Parse JSON string selectors
+  } catch (error) {
+    return res.status(400).json({ error: "Invalid selectors format" });
+  }
+
+  if (!Array.isArray(parsedSelectors)) return next();
+
+  // Helper function to set nested values in an object
+  const setNestedValue = (obj, path, value) => {
+    const keys = path.split('.');
+    keys.reduce((acc, key, idx) => {
+      if (idx === keys.length - 1) {
+        acc[key] = value;
+      } else {
+        if (!acc[key]) acc[key] = {};
+        return acc[key];
+      }
+    }, obj);
+  };
 
   const data = req.data;
   req.data = data.map((item) => {
     const selectedItem = {};
-    selectors.forEach((selector) => {
-      if (item.hasOwnProperty(selector)) selectedItem[selector] = item[selector];
+    parsedSelectors.forEach((selector) => {
+      const value = selector.split('.').reduce((acc, key) => acc && acc[key], item); // Resolve nested value
+      if (value !== undefined) setNestedValue(selectedItem, selector, value); // Set value in nested structure
     });
     return selectedItem;
   });
 
   next();
 };
+
+
 
 
 /**
@@ -112,14 +138,29 @@ export const paginationQueryMiddleware = (req, res, next) => {
  *
  * @returns {Function} A middleware function that searches the data in the request object.
  */
-export const searchQueryMiddleware=(fields)=>(req,res,next)=>{
-  if(!fields || !Array.isArray(fields)) return next();
-  const data=req.data;
-  const {search}=req.query;
-  if(!search) return next();
-  req.data=data.filter(item=>fields.some(field=>item[field].toLowerCase().includes(search.toLowerCase())));
+export const searchQueryMiddleware = (fields) => (req, res, next) => {
+  if (!fields || !Array.isArray(fields)) return next();
+
+  const data = req.data;
+  const { search } = req.query;
+  if (!search) return next();
+
+  // Helper function to get the value at a nested path
+  const getNestedValue = (obj, path) => {
+    return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj);
+  };
+
+  // Filter data based on whether any of the fields contain the search term
+  req.data = data.filter(item =>
+    fields.some(field => {
+      const value = getNestedValue(item, field);
+      return typeof value === 'string' && value.toLowerCase().includes(search.toLowerCase());
+    })
+  );
+
   next();
-}
+};
+
 
 
 /**

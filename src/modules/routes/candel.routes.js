@@ -39,7 +39,7 @@ candelRoutes.get("/:id",attachGetQueryMiddleware("candle"),filterQueryMiddleware
   }));
 
 // get candels on specific exchange
-candelRoutes.get("/",attachGetQueryMiddleware("candle"),filterOnExchangeSymbol,dateRangeFilter,checkDataFromCaching,paginationQueryMiddleware,selectQueryMiddleware,execute(  {
+candelRoutes.get("/",attachGetQueryMiddleware("candle"),filterOnExchangeSymbol,dateRangeFilter,paginationQueryMiddleware,selectQueryMiddleware,checkDataFromCaching,execute(  {
     status: 200,
     result: {
       ok:true,
