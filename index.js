@@ -18,9 +18,20 @@ app.get("/",(req,res)=>{
 });
 
 // apply cors
+const cors = require('cors');
+
 app.use(cors({
-  origin: "https://big-data-fe.vercel.app/"
+  origin: (origin, callback) => {
+    if (!origin || origin === "https://big-data-fe.vercel.app") {
+
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: Not allowed by origin'), false);
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
 }));
+
 
 
 // vars & middlwares part
