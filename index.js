@@ -18,8 +18,6 @@ app.get("/",(req,res)=>{
 });
 
 // apply cors
-const cors = require('cors');
-
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || origin === "https://big-data-fe.vercel.app") {
