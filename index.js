@@ -18,7 +18,10 @@ app.get("/",(req,res)=>{
 });
 
 // apply cors
-app.use(cors())
+app.use(cors({
+  origin: "https://big-data-fe.vercel.app/"
+}));
+
 
 // vars & middlwares part
 const Port=8080 || process.env.PORT;
